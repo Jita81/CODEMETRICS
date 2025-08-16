@@ -12,10 +12,12 @@ from .analyzer import MetricsAnalyzer
 from .collector import DataCollector
 from .dashboard import Dashboard
 from .config import Config
+from .optimizer import IntelligentOptimizer
 
 __all__ = [
     "MetricsAnalyzer",
     "DataCollector", 
     "Dashboard",
-    "Config"
+    "Config",
+    "IntelligentOptimizer"
 ]

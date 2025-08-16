@@ -1,0 +1,151 @@
+name: Analytics Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run analytics daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      project_path:
+        description: 'Path to analyze'
+        required: false
+        default: '.'
+      analysis_type:
+        description: 'Type of analysis'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+        - full
+        - performance
+        - quality
+        - security
+
+jobs:
+  analytics:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run analytics
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python -m codemetrics analyze \
+          --project ${{ github.event.inputs.project_path || '.' }} \
+          --type ${{ github.event.inputs.analysis_type || 'full' }} \
+          --output reports/analytics-${{ github.run_number }}.json
+          
+    - name: Generate reports
+      run: |
+        python -m codemetrics report \
+          --input reports/analytics-${{ github.run_number }}.json \
+          --format html \
+          --output reports/analytics-${{ github.run_number }}.html
+          
+    - name: Upload analytics artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: analytics-reports-${{ github.run_number }}
+        path: reports/
+        retention-days: 30
+        
+    - name: Comment on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          try {
+            const reportPath = `reports/analytics-${{ github.run_number }}.json`;
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              const comment = `## 📊 CodeMetrics Analysis
+              
+              **Performance Score**: ${report.performance_score}/100
+              **Quality Score**: ${report.quality_score}/100
+              **Security Score**: ${report.security_score}/100
+              
+              **Key Findings**:
+              ${report.key_findings.map(f => `- ${f}`).join('\n')}
+              
+              **Recommendations**:
+              ${report.recommendations.map(r => `- ${r}`).join('\n')}
+              
+              [📊 View Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          } catch (error) {
+            console.log('Could not post analytics comment:', error.message);
+          }
+
+  ecosystem-health-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run ecosystem health check
+      env:
+        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python -m codemetrics ecosystem-health \
+          --repos "Jita81/Standardized-Modules-Framework-v1.0.0,Jita81/CODEREVIEW,Jita81/CODECREATE,Jita81/CODEMETRICS" \
+          --output reports/ecosystem-health.json
+          
+    - name: Create ecosystem report
+      run: |
+        python -m codemetrics ecosystem-report \
+          --input reports/ecosystem-health.json \
+          --output reports/ecosystem-dashboard.html
+          
+    - name: Upload ecosystem reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: ecosystem-health-${{ github.run_number }}
+        path: reports/
+        retention-days: 90

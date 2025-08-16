@@ -1,0 +1,38 @@
+# Core dependencies
+anthropic>=0.40.0
+click>=8.1.0
+pyyaml>=6.0.1
+requests>=2.31.0
+
+# Optional dashboard dependencies
+flask>=3.0.0
+gunicorn>=21.2.0
+
+# Data processing
+pandas>=2.1.0
+numpy>=1.24.0
+
+# Visualization (optional)
+plotly>=5.17.0
+matplotlib>=3.7.0
+
+# Async support
+aiohttp>=3.9.0
+asyncio-mqtt>=0.16.0
+
+# File processing
+pathlib2>=2.3.7
+gitpython>=3.1.40
+
+# Caching
+redis>=5.0.0
+diskcache>=5.6.3
+
+# Security
+cryptography>=41.0.0
+PyJWT>=2.8.0
+
+# Testing (optional for runtime)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0

@@ -1,0 +1,59 @@
+# CodeMetrics Configuration Example
+# Copy this file to config.yml and customize for your environment
+
+# API Configuration
+anthropic_api_key: "your-anthropic-api-key-here"
+github_token: "your-github-token-here"
+
+# AI Model Configuration
+model: "claude-3-5-sonnet-20241022"
+max_tokens: 8192
+temperature: 0.3
+
+# Analysis Configuration
+max_file_size_kb: 2000
+max_workers: 4
+chunk_size_lines: 200
+
+# Caching Configuration
+cache_enabled: true
+cache_dir: ".codemetrics_cache"
+cache_ttl_hours: 24
+
+# Retry Configuration
+max_retries: 3
+retry_delay: 2.0
+
+# Dashboard Configuration
+dashboard_host: "localhost"
+dashboard_port: 8080
+dashboard_debug: false
+
+# Ecosystem Configuration
+ecosystem_repos:
+  - "Jita81/Standardized-Modules-Framework-v1.0.0"
+  - "Jita81/CODEREVIEW"
+  - "Jita81/CODECREATE"
+  - "Jita81/CODEMETRICS"
+
+# Output Configuration
+output_dir: "reports"
+output_format: "json"
+
+# Analytics Preferences
+analysis_preferences:
+  performance_weight: 0.4
+  quality_weight: 0.3
+  security_weight: 0.3
+  
+# Notification Settings (optional)
+notifications:
+  enabled: false
+  webhook_url: ""
+  email_alerts: false
+  
+# Integration Settings
+integrations:
+  slack_webhook: ""
+  discord_webhook: ""
+  teams_webhook: ""

@@ -168,6 +168,11 @@ class Dashboard:
         </div>
         
         <div class="status-item">
+            <span>🧪 CodeTest (Framework Testing)</span>
+            <span class="status-active">✅ Active</span>
+        </div>
+        
+        <div class="status-item">
             <span>📊 CodeMetrics (This Dashboard)</span>
             <span class="status-active">✅ Active</span>
         </div>
@@ -270,6 +275,11 @@ class Dashboard:
                     'status': 'active', 
                     'health_score': 97,
                     'last_activity': time.time() - 900   # 15 minutes ago
+                },
+                'codetest': {
+                    'status': 'active',
+                    'health_score': 90,
+                    'last_activity': time.time() - 1200  # 20 minutes ago
                 },
                 'codemetrics': {
                     'status': 'active',

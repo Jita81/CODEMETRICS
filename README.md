@@ -14,6 +14,7 @@
 | 🏗️ **[Standardized Modules Framework](https://github.com/Jita81/Standardized-Modules-Framework-v1.0.0)** | AI-optimized scaffolding & structure | `Jita81/Standardized-Modules-Framework-v1.0.0` | ✅ Active |
 | 🔍 **[CodeReview](https://github.com/Jita81/CODEREVIEW)** | AI-powered code analysis & security | `Jita81/CODEREVIEW` | ✅ Active |
 | 🤖 **[CodeCreate](https://github.com/Jita81/CODECREATE)** | AI-driven module generation | `Jita81/CODECREATE` | ✅ Active |
+| 🧪 **[CodeTest](https://github.com/Jita81/CODETEST)** | Framework compliance & testing | `Jita81/CODETEST` | ✅ Active |
 | 📊 **CodeMetrics** | AI-powered analytics & insights | `Jita81/CODEMETRICS` | 🚀 **This Repository** |
 
 ### 🔄 **Complete Development Intelligence**
@@ -21,8 +22,9 @@
 1. **🏗️ Scaffold** → Generate structure with [Standardized Modules Framework](https://github.com/Jita81/Standardized-Modules-Framework-v1.0.0)
 2. **🤖 Generate** → Create code with [CodeCreate](https://github.com/Jita81/CODECREATE) (Claude 4)
 3. **🔍 Review** → Validate quality with [CodeReview](https://github.com/Jita81/CODEREVIEW)
-4. **📊 Analyze** → **Optimize performance with CodeMetrics** (AI-driven insights)
-5. **🚀 Deploy** → Ship with continuous optimization
+4. **🧪 Test** → Ensure compliance with [CodeTest](https://github.com/Jita81/CODETEST) (Framework validation)
+5. **📊 Analyze** → **Optimize performance with CodeMetrics** (AI-driven insights)
+6. **🚀 Deploy** → Ship with continuous optimization
 
 ---
 
@@ -48,6 +50,7 @@ An intelligent analytics platform that provides AI-powered insights into develop
 * **Framework Analytics**: Track scaffolding efficiency and patterns
 * **Generation Metrics**: Monitor [CodeCreate](https://github.com/Jita81/CODECREATE) output quality
 * **Review Correlation**: Analyze [CodeReview](https://github.com/Jita81/CODEREVIEW) findings trends
+* **Testing Analytics**: Track [CodeTest](https://github.com/Jita81/CODETEST) compliance and validation
 * **Continuous Feedback**: Close the loop with actionable insights
 
 ## 📊 **Analytics Dashboard**
@@ -77,16 +80,17 @@ graph LR
     A[📋 Requirements] --> B[🏗️ Framework]
     B --> C[🤖 Generate]
     C --> D[🔍 Review]
-    D --> E[📊 Analyze]
-    E --> F[🚀 Deploy]
-    F --> G[📈 Monitor]
-    G --> A
+    D --> E[🧪 Test]
+    E --> F[📊 Analyze]
+    F --> G[🚀 Deploy]
+    G --> H[📈 Monitor]
+    H --> A
     
-    E --> H[🔧 Optimize]
-    H --> B
+    F --> I[🔧 Optimize]
+    I --> B
     
-    style E fill:#fff3e0
-    style H fill:#e8f5e8
+    style F fill:#fff3e0
+    style I fill:#e8f5e8
 ```
 
 ## 🚀 **Quick Start**
@@ -151,6 +155,11 @@ data_sources:
     - quality_assessment_results
     - security_finding_trends
     - review_consistency_metrics
+    
+  codetest:
+    - framework_compliance_metrics
+    - testing_coverage_analysis
+    - validation_performance_data
 ```
 
 ### 📊 **Analytics Pipeline**
@@ -287,6 +296,7 @@ black src/
 * 🏗️ **Framework**: [Standardized-Modules-Framework](https://github.com/Jita81/Standardized-Modules-Framework-v1.0.0)
 * 🔍 **Review**: [CodeReview](https://github.com/Jita81/CODEREVIEW)
 * 🤖 **Generation**: [CodeCreate](https://github.com/Jita81/CODECREATE)
+* 🧪 **Testing**: [CodeTest](https://github.com/Jita81/CODETEST)
 * 📊 **Analytics**: [CodeMetrics](https://github.com/Jita81/CODEMETRICS) (this repository)
 
 ### 📧 **Support Channels**
@@ -300,6 +310,7 @@ black src/
 * **[Standardized Modules Framework](https://github.com/Jita81/Standardized-Modules-Framework-v1.0.0)**: Foundation for consistent analytics
 * **[CodeCreate](https://github.com/Jita81/CODECREATE)**: Generation metrics and quality tracking
 * **[CodeReview](https://github.com/Jita81/CODEREVIEW)**: Quality correlation and trend analysis
+* **[CodeTest](https://github.com/Jita81/CODETEST)**: Framework compliance and testing validation
 
 ### 📊 **Analytics Foundation**
 * **Claude 4**: AI-powered performance analysis and insights

@@ -94,6 +94,7 @@ def ecosystem_health(repos, output):
             "Jita81/Standardized-Modules-Framework-v1.0.0",
             "Jita81/CODEREVIEW", 
             "Jita81/CODECREATE",
+            "Jita81/CODETEST",
             "Jita81/CODEMETRICS"
         ]
         

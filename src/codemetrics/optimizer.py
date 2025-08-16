@@ -1,9 +1,10 @@
 """
 Intelligent Feedback Optimization Engine using Claude
 
-This module analyzes ecosystem feedback, identifies improvement opportunities,
-and automatically tests optimization strategies across Framework, CodeCreate,
-CodeReview, and CodeTest components.
+LEGACY FILE - This module is now refactored to use the Standardized Modules Framework.
+For the new modular implementation, use: src.codemetrics.modules.optimization
+
+This file remains for backward compatibility but delegates to the new modular architecture.
 """
 
 import json
@@ -22,8 +23,37 @@ except ImportError:
     raise ImportError("Required packages not installed. Run: pip install anthropic gitpython")
 
 from .config import Config
-from .analyzer import MetricsAnalyzer
-from ..integrations import CodeCreateIntegration, CodeReviewIntegration, CodeTestIntegration, FrameworkIntegration
+
+# Compatibility classes for legacy interface
+class SimpleMetrics:
+    """Simple metrics implementation for compatibility"""
+    def record_optimization_start(self, request_id: str) -> None:
+        print(f"📊 Started optimization: {request_id}")
+    
+    def record_optimization_complete(self, request_id: str, duration: float, success: bool) -> None:
+        status = "✅ Success" if success else "❌ Failed"
+        print(f"📊 Completed optimization: {request_id} - {status} ({duration:.1f}s)")
+    
+    def record_pattern_found(self, pattern_type: str, confidence: float) -> None:
+        print(f"📊 Pattern found: {pattern_type} (confidence: {confidence:.2f})")
+    
+    def record_test_result(self, component: str, success: bool, duration: float) -> None:
+        status = "✅" if success else "❌"
+        print(f"📊 Test result: {component} {status} ({duration:.1f}s)")
+
+class SimpleNotifications:
+    """Simple notifications implementation for compatibility"""
+    def notify_optimization_start(self, request) -> None:
+        print(f"🚀 Optimization started for components: {', '.join(request.components)}")
+    
+    def notify_optimization_complete(self, response) -> None:
+        print(f"🎉 Optimization completed: {response.success_count} successes, {response.failure_count} failures")
+    
+    def notify_critical_pattern(self, pattern: Dict[str, Any]) -> None:
+        print(f"🚨 Critical pattern detected: {pattern.get('description', 'Unknown')}")
+    
+    def notify_optimization_failure(self, request_id: str, error: str) -> None:
+        print(f"💥 Optimization failed: {request_id} - {error}")
 
 @dataclass
 class OptimizationResult:
@@ -48,19 +78,30 @@ class FeedbackPattern:
     confidence: float
 
 class IntelligentOptimizer:
-    """AI-powered ecosystem optimization engine"""
+    """
+    AI-powered ecosystem optimization engine
+    
+    LEGACY CLASS - This is now a compatibility wrapper around the new modular architecture.
+    New code should use: from .modules.optimization import OptimizationEngine, OptimizationEngineFactory
+    """
     
     def __init__(self, config: Config):
         self.config = config
-        self.client = anthropic.Anthropic(api_key=config.anthropic_api_key)
-        self.analyzer = MetricsAnalyzer(config)
         
-        # Ecosystem integrations
-        self.codecreate = CodeCreateIntegration(config.github_token)
-        self.codereview = CodeReviewIntegration(config.github_token)
-        self.codetest = CodeTestIntegration(config.github_token)
-        self.framework = FrameworkIntegration(config.github_token)
+        # Import and use the new modular architecture
+        from .modules.optimization import OptimizationEngineFactory, OptimizationRequest
+        from .modules.optimization.error_handling import ErrorHandler
         
+        # Create metrics and notifications (simplified for compatibility)
+        metrics = SimpleMetrics()
+        notifications = SimpleNotifications()
+        
+        # Create the new modular optimization engine
+        self.optimization_engine = OptimizationEngineFactory.create_optimization_engine(
+            config, metrics, notifications
+        )
+        
+        self.error_handler = ErrorHandler()
         self.optimization_results = []
     
     async def analyze_ecosystem_feedback(self) -> List[FeedbackPattern]:
@@ -87,41 +128,49 @@ class IntelligentOptimizer:
         
         print(f"🚀 Starting intelligent ecosystem optimization ({max_iterations} iterations)")
         
-        # Step 1: Analyze current feedback patterns
-        feedback_patterns = await self.analyze_ecosystem_feedback()
-        
-        if not feedback_patterns:
-            print("ℹ️ No significant optimization opportunities identified")
-            return []
-        
-        # Step 2: Prioritize optimization opportunities
-        prioritized_patterns = self._prioritize_patterns(feedback_patterns)
-        
-        # Step 3: Run optimization iterations
-        optimization_results = []
-        
-        for iteration in range(min(max_iterations, len(prioritized_patterns))):
-            pattern = prioritized_patterns[iteration]
+        try:
+            # Use the new modular architecture
+            from .modules.optimization import OptimizationRequest
+            from datetime import datetime
+            import uuid
             
-            print(f"\n🔧 Iteration {iteration + 1}: Optimizing {pattern.component} - {pattern.issue_type}")
-            
-            result = await self._run_optimization_iteration(
-                iteration + 1, 
-                pattern
+            # Create optimization request using the new modular format
+            request = OptimizationRequest(
+                request_id=str(uuid.uuid4()),
+                components=["codecreate", "codereview", "codetest", "framework"],
+                max_iterations=max_iterations,
+                priority_level="high",
+                requester="intelligent_optimizer",
+                timestamp=datetime.now(),
+                configuration={"timeout_minutes": 60, "parallel_processing": False}
             )
             
-            if result:
-                optimization_results.append(result)
-                print(f"✅ Iteration {iteration + 1} completed - Success score: {result.success_score:.2f}")
-            else:
-                print(f"❌ Iteration {iteration + 1} failed")
-        
-        # Step 4: Analyze results and recommend best optimizations
-        best_optimizations = self._analyze_optimization_results(optimization_results)
-        
-        print(f"\n📊 Optimization complete. {len(best_optimizations)} successful improvements identified.")
-        
-        return optimization_results
+            # Run optimization using the new modular engine
+            response = await self.optimization_engine.optimize_ecosystem(request)
+            
+            # Convert response to legacy format for compatibility
+            legacy_results = []
+            for result_dict in response.results:
+                legacy_result = OptimizationResult(
+                    iteration=result_dict["iteration"],
+                    branch_name=result_dict["branch_name"],
+                    component=result_dict["pattern"]["component"],
+                    changes_made=result_dict.get("changes_made", []),
+                    test_results=result_dict["test_results"],
+                    performance_improvement=result_dict.get("performance_improvement", 0.0),
+                    success_score=result_dict["success_score"],
+                    timestamp=result_dict["timestamp"]
+                )
+                legacy_results.append(legacy_result)
+            
+            print(f"\n📊 Optimization complete. {response.success_count} successful improvements identified.")
+            
+            return legacy_results
+            
+        except Exception as e:
+            self.error_handler.handle_error(e, {"operation": "optimize_ecosystem", "max_iterations": max_iterations})
+            print(f"❌ Optimization failed: {e}")
+            return []
     
     async def _run_optimization_iteration(self, iteration: int, pattern: FeedbackPattern) -> Optional[OptimizationResult]:
         """Run a single optimization iteration"""
